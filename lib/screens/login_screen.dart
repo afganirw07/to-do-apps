@@ -76,7 +76,7 @@ class _LoginScreensState extends State<LoginScreens> {
                 obscureText: _showPassword,
                 decoration: InputDecoration(
                   labelText: "Password",
-                  prefixIcon: Icon(Icons.fingerprint),
+                  prefixIcon: Icon(Icons.lock),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -121,7 +121,7 @@ class _LoginScreensState extends State<LoginScreens> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("No have a Account? "),
+                  const Text("No have an Account? "),
                   TextButton(
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
