@@ -26,8 +26,6 @@ lib/
 │   ├── login_screen.dart    # Halaman login
 │   ├── register_screen.dart # Halaman register
 │   └── homepage.dart        # Halaman utama (Todo CRUD)
-└── widgets/
-    └── todo_item.dart       # Widget todo individual
 ```
 
 ---
