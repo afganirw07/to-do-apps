@@ -21,8 +21,8 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     nextPage = Supabase.instance.client.auth.currentSession == null
-        ? const LoginScreens()
-        : const Register();
+        ? const Register()
+        : const LoginScreens();
 
     Future.delayed(const Duration(seconds: 4), () {
       Navigator.pushReplacement(

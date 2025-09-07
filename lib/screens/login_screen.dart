@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:to_do_list_flutter/screens/register_screen.dart';
+import 'package:to_do_list_flutter/screens/todo_list_screen.dart';
 
 class LoginScreens extends StatefulWidget {
   const LoginScreens({super.key});
@@ -12,6 +14,44 @@ class LoginScreens extends StatefulWidget {
 
 class _LoginScreensState extends State<LoginScreens> {
   bool _showPassword = true;
+
+  // controler
+  final _emailController = TextEditingController();
+  final _PasswordController = TextEditingController();
+
+  Future<void> _login() async {
+    final email = _emailController.text.trim();
+    final password = _PasswordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("All fields must be filled in !")),
+      );
+      return;
+    }
+
+    try {
+      final response = await Supabase.instance.client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+
+      if (response.session != null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Login Success")));
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Homepage()),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error $e")));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +100,7 @@ class _LoginScreensState extends State<LoginScreens> {
 
               // nanti form login masuk sini
               TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   labelText: "Email",
                   prefixIcon: Icon(Icons.email),
@@ -73,6 +114,7 @@ class _LoginScreensState extends State<LoginScreens> {
               const SizedBox(height: 16),
 
               TextField(
+                controller: _PasswordController,
                 obscureText: _showPassword,
                 decoration: InputDecoration(
                   labelText: "Password",
@@ -97,7 +139,7 @@ class _LoginScreensState extends State<LoginScreens> {
               const SizedBox(height: 20),
 
               ElevatedButton(
-                onPressed: () {},
+                onPressed: _login,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 78, 143, 255),
                   minimumSize: const Size(double.infinity, 50),

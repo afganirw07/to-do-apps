@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -11,6 +12,55 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   bool _showPassword = true;
+  // controler
+  final _fullNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future<void> _register() async {
+    final fullName = _fullNameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (fullName.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("All fields must be filled in !")),
+      );
+      return;
+    }
+
+    try {
+      final response = await Supabase.instance.client.auth.signUp(
+        email: email,
+        password: password,
+      );
+
+      if (response.user != null) {
+        await Supabase.instance.client.from('users').insert({
+          'id': response.user!.id,
+          'full_name': fullName,
+          'email': email,
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration Successful')),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error $e")));
+    }
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +109,7 @@ class _RegisterState extends State<Register> {
 
               // Nama Lengkap
               TextField(
+                controller: _fullNameController,
                 decoration: InputDecoration(
                   labelText: "Full Name",
                   prefixIcon: const Icon(Icons.person),
@@ -72,6 +123,7 @@ class _RegisterState extends State<Register> {
 
               // Email
               TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   labelText: "Email",
                   prefixIcon: const Icon(Icons.email),
@@ -85,6 +137,7 @@ class _RegisterState extends State<Register> {
 
               // Password
               TextField(
+                controller: _passwordController,
                 obscureText: _showPassword,
                 decoration: InputDecoration(
                   labelText: "Password",
@@ -109,8 +162,7 @@ class _RegisterState extends State<Register> {
 
               // Tombol Register
               ElevatedButton(
-                onPressed: () {
-                },
+                onPressed: _register,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 78, 143, 255),
                   minimumSize: const Size(double.infinity, 50),
@@ -128,11 +180,9 @@ class _RegisterState extends State<Register> {
                 ),
               ),
 
-
-            // Login
+              // Login
               const SizedBox(height: 15),
 
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -144,7 +194,7 @@ class _RegisterState extends State<Register> {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     onPressed: () {
-                      Navigator.pop(context); 
+                      Navigator.pop(context);
                     },
                     child: const Text(
                       "Sign In",
