@@ -35,8 +35,8 @@ lib/
 
 ### 1. Clone repository
 ```bash
-git clone https://github.com/username/todo_flutter_supabase.git
-cd todo_flutter_supabase
+git clone https://github.com/afganirw07/to-do-apps.git
+cd to-do-apps
 ```
 
 ### 2. Install dependencies
