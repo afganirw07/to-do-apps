@@ -25,7 +25,8 @@ lib/
 ├── screens/
 │   ├── login_screen.dart    # Halaman login
 │   ├── register_screen.dart # Halaman register
-│   └── homepage.dart        # Halaman utama (Todo CRUD)
+│   ├── splash_screen.dart # Splash Screens
+│   └── todo_list_screen.dart        # Halaman utama (Todo CRUD)
 ```
 
 ---
