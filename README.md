@@ -62,21 +62,28 @@ Jalankan SQL berikut di **Supabase SQL Editor**:
 ```sql
 -- Tabel users (otomatis dibuat oleh Supabase Auth, 
 -- tapi kita simpan full_name juga di sini)
-create table if not exists users (
-  id uuid references auth.users on delete cascade,
-  full_name text,
-  email text unique,
-  primary key (id)
-);
+create table public.users (
+  id uuid not null default gen_random_uuid (),
+  full_name character varying null,
+  email character varying null,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp without time zone null default now(),
+  constraint users_pkey primary key (id),
+  constraint users_email_key unique (email)
+) TABLESPACE pg_default;
 
 -- Tabel todos
-create table if not exists todos (
-  id uuid default uuid_generate_v4() primary key,
-  user_id uuid references auth.users on delete cascade,
+create table public.todos (
+  id uuid not null default gen_random_uuid (),
+  user_id uuid not null,
   title text not null,
-  is_done boolean default false,
-  created_at timestamp default now()
-);
+  description text null,
+  is_completed boolean not null default false,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint todos_pkey primary key (id),
+  constraint todos_user_id_fkey foreign KEY (user_id) references auth.users (id) on delete CASCADE
+) TABLESPACE pg_default;
 ```
 
 <img src="https://i.ibb.co.com/35dk2kzf/Untitled-2.png" alt="Database Schema" width="500">
