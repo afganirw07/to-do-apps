@@ -80,6 +80,9 @@ create table if not exists todos (
 );
 ```
 
+<img src="https://i.ibb.co.com/35dk2kzf/Untitled-2.png" alt="Database Schema" width="500">
+
+
 ---
 
 ## ▶️ Menjalankan Aplikasi
